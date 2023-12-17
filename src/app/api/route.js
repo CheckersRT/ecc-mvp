@@ -39,21 +39,24 @@ export async function POST(req, res) {
             cache: "no-cache"
         })
 
-        if (!response.ok) throw new Error("GPT-3 API fetch error");
+        console.log(response)
+
+        if (!response.ok) {
+            throw new Error(`GPT-3 API fetch error: ${response.status} - ${response.statusText}`);
+        }
 
         const responseJson = await response.json();
 
         console.log("responseJson ", responseJson)
         console.log("message choices ",responseJson.choices[0].message.content.trim())
 
-        const output = JSON.parse(
-            responseJson.choices[0].message.content.trim()
-        );
-
-        return output;
+        const output = responseJson.choices[0].message.content.trim()
+        console.log("ouput: ", output)
+;
+        return NextResponse.json({"output": output})
         
     } catch (error) {
-        console.log("Error!!!")
+        console.log("Error!!!", error)
         
     }
 
